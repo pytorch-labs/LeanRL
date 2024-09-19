@@ -1,3 +1,31 @@
+slurm
+.aim
+runs
+balance_bot.xml
+cleanrl/ppo_continuous_action_isaacgym/isaacgym/examples
+cleanrl/ppo_continuous_action_isaacgym/isaacgym/isaacgym
+cleanrl/ppo_continuous_action_isaacgym/isaacgym/LICENSE.txt
+cleanrl/ppo_continuous_action_isaacgym/isaacgym/rlgpu_conda_env.yml
+cleanrl/ppo_continuous_action_isaacgym/isaacgym/setup.py
+
+IsaacGym_Preview_3_Package.tar.gz
+IsaacGym_Preview_4_Package.tar.gz
+cleanrl_hpopt.db
+debug.sh.docker.sh
+docker_cache
+rl-video-*.mp4
+rl-video-*.json
+cleanrl_utils/charts_episode_reward
+tutorials
+.DS_Store
+*.tfevents.*
+wandb
+openaigym.*
+videos/*
+cleanrl/videos/*
+benchmark/**/*.svg
+benchmark/**/*.pkl
+mjkey.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -14,7 +42,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -73,7 +100,7 @@ target/
 .ipynb_checkpoints
 
 # pyenv
-.python-version
+# .python-version
 
 # celery beat schedule file
 celerybeat-schedule
