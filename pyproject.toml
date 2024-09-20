@@ -103,3 +103,29 @@ qdagger_dqn_atari_jax_impalacnn = [
     "ale-py", "AutoROM", "opencv-python", # atari
     "jax", "jaxlib", "flax", # jax
 ]
+
+[tool.pixi.project]
+channels = ["conda-forge","pytorch"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[tool.pixi.pypi-dependencies]
+gym = "==0.23.1"
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+python = ">=3.8,<3.11"
+tensorboard = ">=2.10.0,<3.0.0"
+wandb = ">=0.13.11,<1.0.0"
+pytorch = ">=2.0"
+stable-baselines3 = "2.0.0"
+gymnasium = ">=0.28.1"
+moviepy = ">=1.0.3,<2.0.0"
+pygame = ">=2.1,<2.2"
+huggingface_hub = ">=0.11.1,<1.0.0"
+rich = "<12.0"
+tenacity = ">=8.2.2,<9.0.0"
+tyro = ">=0.5.10,<1.0.0"
+pyyaml = ">=6.0.1,<7.0.0"
+numpy = ">=1.21.6"
+
