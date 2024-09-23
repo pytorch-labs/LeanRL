@@ -74,6 +74,8 @@ There are three sources of speed-ups in the codes proposed here:
 **To reproduce these results in your own code base**: look for calls to `torch.compile` and `CudaGraphModule` wrapper
 within the `*_torchcompile.py` scripts.
 
+You can also look into `run.sh` for the exact commands we used to run the scripts.
+
 The following table displays speed-ups obtained on a H100 equipped node with TODO cpu cores.
 All models were executed on GPU, simulation was done on CPU.
 
@@ -172,7 +174,7 @@ scripts).
 <details>
   <summary>PPO (Atari - Breakout-v5)</summary>
 
-  ![SAC.png](doc/artifacts/PPO.png)
+  ![SAC.png](doc/artifacts/ppo.png)
 
   ![sac_speed.png](doc/artifacts/ppo_speed.png)
 
@@ -218,17 +220,17 @@ Prerequisites:
   git clone https://github.com/pytorch-labs/leanrl.git && cd leanrl
   ```
 * Python >=3.7.1,<3.11
-- `pip install -r requirements/requirements.txt` for basic requirements, or another `.txt` file for specific applications.
 - Upgrade torch to its nightly builds for a better coverage of `torch.compile`:
-  - CUDA 11.8: `pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu118`
-  - CUDA 12.1: `pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu121`
-  - CUDA 12.4: `pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu124`
-  - CPU: `pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
+  - CUDA 11.8: `pip3 install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cu118`
+  - CUDA 12.1: `pip3 install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cu121`
+  - CUDA 12.4: `pip3 install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cu124`
+  - CPU: `pip3 install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
+- `pip install -r requirements/requirements.txt` for basic requirements, or another `.txt` file for specific applications.
 
 Once the dependencies have been installed, run the scripts as follows
 
 ```bash
-python leanrl/ppo_atari_torchcompile.py \
+python leanrl/ppo_atari_envpool_torchcompile.py \
     --seed 1 \
     --total-timesteps 50000 \
     --compile \
