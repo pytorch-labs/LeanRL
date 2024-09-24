@@ -190,25 +190,17 @@ def gae(next_obs, next_done, container):
     container["returns"] = advantages + vals
     return container
 
-
-# @torch.compile()
-def act_and_step_func(obs):
-    # ALGO LOGIC: action logic
-    action, logprob, _, value = policy(obs=obs)
-
-    # TRY NOT TO MODIFY: execute the game and log data.
-    next_obs, reward, next_done, info = step_func(action)
-    return next_obs, reward, next_done, action, logprob, value
-
-
 def rollout(obs, done, avg_returns=[]):
     ts = []
     for step in range(args.num_steps):
 
-        # idx = next_done & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
-        # if idx.any():
-        #     avg_returns.extend(torch.as_tensor(info["r"])[idx])
-        next_obs, reward, next_done, action, logprob, value = act_and_step_func(obs)
+        idx = next_done & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
+        if idx.any():
+            avg_returns.extend(torch.as_tensor(info["r"])[idx])
+        action, logprob, _, value = policy(obs=obs)
+
+        # TRY NOT TO MODIFY: execute the game and log data.
+        next_obs, reward, next_done, info = step_func(action)
 
         ts.append(
             tensordict.TensorDict._new_unsafe(
@@ -320,8 +312,6 @@ if __name__ == "__main__":
     envs = RecordEpisodeStatistics(envs)
     assert isinstance(envs.action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
-    # Register step as a special op not to graph break
-    # @torch.library.custom_op("mylib::step", mutates_args=())
     def step_func(action: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
         return torch.as_tensor(next_obs_np), torch.as_tensor(reward), torch.as_tensor(next_done), info
