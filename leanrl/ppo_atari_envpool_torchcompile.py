@@ -194,13 +194,12 @@ def rollout(obs, done, avg_returns=[]):
     ts = []
     for step in range(args.num_steps):
 
+        action, logprob, _, value = policy(obs=obs)
+        next_obs, reward, next_done, info = step_func(action)
+
         idx = next_done & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
         if idx.any():
             avg_returns.extend(torch.as_tensor(info["r"])[idx])
-        action, logprob, _, value = policy(obs=obs)
-
-        # TRY NOT TO MODIFY: execute the game and log data.
-        next_obs, reward, next_done, info = step_func(action)
 
         ts.append(
             tensordict.TensorDict._new_unsafe(
