@@ -1,6 +1,4 @@
 envpool
-gym
-gymnasium[atari,accept-rom-license]
 jax-jumpy==1.0.0 ; python_version >= "3.8" and python_version < "3.11"
 matplotlib
 moviepy
