@@ -10,7 +10,6 @@ import random
 import time
 from collections import deque
 from dataclasses import dataclass
-from typing import Tuple
 
 import envpool
 
@@ -191,6 +190,7 @@ def gae(next_obs, next_done, container):
     advantages = container["advantages"] = torch.stack(list(reversed(advantages)))
     container["returns"] = advantages + vals
     return container
+
 
 def rollout(obs, done, avg_returns=[]):
     ts = []

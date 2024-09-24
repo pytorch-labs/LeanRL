@@ -3,7 +3,7 @@ envpool
 jax-jumpy==1.0.0 ; python_version >= "3.8" and python_version < "3.11"
 matplotlib
 moviepy
-numpy
+numpy<2.0
 pandas
 protobuf
 pygame
