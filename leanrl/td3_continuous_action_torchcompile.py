@@ -1,4 +1,8 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/td3/#td3_continuous_actionpy
+import os
+
+os.environ["TORCHDYNAMO_INLINE_INBUILT_NN_MODULES"] = "1"
+
 import math
 import os
 import random

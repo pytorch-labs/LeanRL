@@ -237,6 +237,23 @@ python leanrl/ppo_atari_envpool_torchcompile.py \
     --cudagraphs
 ```
 
+Together, the installation steps will generally look like this:
+```bash
+conda create -n leanrl python=3.10 -y
+conda activate leanrl
+python -m pip install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cu124
+python -m pip install -r requirements/requirements.txt
+python -m pip install -r requirements/requirements-atari.txt
+python -m pip install -r requirements/requirements-envpool.txt
+python -m pip install -r requirements/requirements-mujoco.txt
+
+python leanrl/ppo_atari_envpool_torchcompile.py \
+    --seed 1 \
+    --compile \
+    --cudagraphs
+
+```
+
 ## Citing CleanRL
 
 LeanRL does not have a citation yet, credentials should be given to CleanRL instead.
