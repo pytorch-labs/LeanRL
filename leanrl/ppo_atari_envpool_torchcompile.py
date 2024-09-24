@@ -1,8 +1,6 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppo_atari_envpoolpy
 import os
 
-from torchrl._utils import timeit
-
 os.environ["TORCHDYNAMO_INLINE_INBUILT_NN_MODULES"] = "1"
 
 import os
@@ -196,13 +194,11 @@ def rollout(obs, done, avg_returns=[]):
     ts = []
     for step in range(args.num_steps):
 
-        with timeit("rollout - policy"):
-            action, logprob, _, value = policy(obs=obs)
-        with timeit("rollout - step"):
-            next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
-            next_obs = torch.as_tensor(next_obs_np)
-            reward = torch.as_tensor(reward)
-            next_done = torch.as_tensor(next_done)
+        action, logprob, _, value = policy(obs=obs)
+        next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
+        next_obs = torch.as_tensor(next_obs_np)
+        reward = torch.as_tensor(reward)
+        next_done = torch.as_tensor(next_done)
 
         idx = next_done
         if idx.any():
@@ -227,8 +223,7 @@ def rollout(obs, done, avg_returns=[]):
         obs = next_obs = next_obs.to(device, non_blocking=True)
         done = next_done.to(device, non_blocking=True)
 
-    with timeit("rollout - stack to"):
-        container = torch.stack(ts, 0).to(device)
+    container = torch.stack(ts, 0).to(device)
     return next_obs, done, container
 
 
@@ -379,12 +374,10 @@ if __name__ == "__main__":
             optimizer.param_groups[0]["lr"].copy_(lrnow)
 
         torch.compiler.cudagraph_mark_step_begin()
-        with timeit("rollout"):
-            next_obs, next_done, container = rollout(next_obs, next_done, avg_returns=avg_returns)
+        next_obs, next_done, container = rollout(next_obs, next_done, avg_returns=avg_returns)
         global_step += container.numel()
 
-        with timeit("gae"):
-            container = gae(next_obs, next_done, container)
+        container = gae(next_obs, next_done, container)
         container_flat = container.view(-1)
 
         # Optimizing the policy and value network
@@ -394,8 +387,7 @@ if __name__ == "__main__":
             for b in b_inds:
                 container_local = container_flat[b]
 
-                with timeit("update"):
-                    out = update(container_local, tensordict_out=tensordict.TensorDict())
+                out = update(container_local, tensordict_out=tensordict.TensorDict())
                 if args.target_kl is not None and out["approx_kl"] > args.target_kl:
                     break
             else:
@@ -403,7 +395,6 @@ if __name__ == "__main__":
             break
 
         if global_step_burnin is not None and iteration % 10 == 0:
-            timeit.print()
             cur_time = time.time()
             speed = (global_step - global_step_burnin) / (cur_time - start_time)
             global_step_burnin = global_step
