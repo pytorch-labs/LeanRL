@@ -191,7 +191,7 @@ def gae(next_obs, next_done, container):
     return container
 
 
-@torch.compile()
+# @torch.compile()
 def act_and_step_func(obs):
     # ALGO LOGIC: action logic
     action, logprob, _, value = policy(obs=obs)
@@ -321,7 +321,7 @@ if __name__ == "__main__":
     assert isinstance(envs.action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
     # Register step as a special op not to graph break
-    @torch.library.custom_op("mylib::step", mutates_args=())
+    # @torch.library.custom_op("mylib::step", mutates_args=())
     def step_func(action: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
         return torch.as_tensor(next_obs_np), torch.as_tensor(reward), torch.as_tensor(next_done), info
