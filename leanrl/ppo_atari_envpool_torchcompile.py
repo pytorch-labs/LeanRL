@@ -1,6 +1,8 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppo_atari_envpoolpy
 import os
 
+from torchrl._utils import timeit
+
 os.environ["TORCHDYNAMO_INLINE_INBUILT_NN_MODULES"] = "1"
 
 import os
@@ -368,10 +370,12 @@ if __name__ == "__main__":
             optimizer.param_groups[0]["lr"].copy_(lrnow)
 
         torch.compiler.cudagraph_mark_step_begin()
-        next_obs, next_done, container = rollout(next_obs, next_done, avg_returns=avg_returns)
+        with timeit("rollout"):
+            next_obs, next_done, container = rollout(next_obs, next_done, avg_returns=avg_returns)
         global_step += container.numel()
 
-        container = gae(next_obs, next_done, container)
+        with timeit("gae"):
+            container = gae(next_obs, next_done, container)
         container_flat = container.view(-1)
 
         # Optimizing the policy and value network
@@ -381,7 +385,8 @@ if __name__ == "__main__":
             for b in b_inds:
                 container_local = container_flat[b]
 
-                out = update(container_local, tensordict_out=tensordict.TensorDict())
+                with timeit("update"):
+                    out = update(container_local, tensordict_out=tensordict.TensorDict())
                 if args.target_kl is not None and out["approx_kl"] > args.target_kl:
                     break
             else:
@@ -389,6 +394,7 @@ if __name__ == "__main__":
             break
 
         if global_step_burnin is not None and iteration % 10 == 0:
+            timeit.print()
             cur_time = time.time()
             speed = (global_step - global_step_burnin) / (cur_time - start_time)
             global_step_burnin = global_step
