@@ -227,6 +227,8 @@ Prerequisites:
   - CPU: `pip3 install --upgrade --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
 - `pip install -r requirements/requirements.txt` for basic requirements, or another `.txt` file for specific applications.
 
+
+
 Once the dependencies have been installed, run the scripts as follows
 
 ```bash
