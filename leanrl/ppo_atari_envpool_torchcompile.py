@@ -199,7 +199,10 @@ def rollout(obs, done, avg_returns=[]):
         with timeit("rollout - policy"):
             action, logprob, _, value = policy(obs=obs)
         with timeit("rollout - step"):
-            next_obs, reward, next_done, info = step_func(action)
+            next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
+            next_obs = torch.as_tensor(next_obs_np)
+            reward = torch.as_tensor(reward)
+            next_done = torch.as_tensor(next_done)
 
         idx = next_done & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
         if idx.any():
@@ -221,7 +224,8 @@ def rollout(obs, done, avg_returns=[]):
         obs = next_obs = next_obs.to(device, non_blocking=True)
         done = next_done.to(device, non_blocking=True)
 
-    container = torch.stack(ts, 0).to(device)
+    with timeit("rollout - stack to"):
+        container = torch.stack(ts, 0).to(device)
     return next_obs, done, container
 
 
@@ -315,9 +319,9 @@ if __name__ == "__main__":
     envs = RecordEpisodeStatistics(envs)
     assert isinstance(envs.action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
-    def step_func(action: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
-        return torch.as_tensor(next_obs_np), torch.as_tensor(reward), torch.as_tensor(next_done), info
+    # def step_func(action: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    #     next_obs_np, reward, next_done, info = envs.step(action.cpu().numpy())
+    #     return torch.as_tensor(next_obs_np), torch.as_tensor(reward), torch.as_tensor(next_done), info
 
     ####### Agent #######
     agent = Agent(envs, device=device)
