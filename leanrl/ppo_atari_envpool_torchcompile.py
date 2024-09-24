@@ -204,9 +204,12 @@ def rollout(obs, done, avg_returns=[]):
             reward = torch.as_tensor(reward)
             next_done = torch.as_tensor(next_done)
 
-        idx = next_done & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
+        idx = next_done
         if idx.any():
-            avg_returns.extend(torch.as_tensor(info["r"])[idx])
+            idx = idx & torch.as_tensor(info["lives"] == 0, device=next_done.device, dtype=torch.bool)
+            if idx.any():
+                r = torch.as_tensor(info["r"])
+                avg_returns.extend(r[idx])
 
         ts.append(
             tensordict.TensorDict._new_unsafe(
