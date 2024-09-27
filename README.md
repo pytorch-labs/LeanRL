@@ -1,4 +1,4 @@
-[![LeanRL](https://img.shields.io/badge/Discord-join%20our%20community-green)](https://discord.com/channels/1171857748607115354/1289142756614213697)
+[![LeanRL](https://img.shields.io/badge/Discord-LeanRL-blue)](https://discord.com/channels/1171857748607115354/1289142756614213697)
 
 # LeanRL - Turbo-implementations of CleanRL scripts 
 
